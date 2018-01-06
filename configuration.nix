@@ -125,15 +125,47 @@
     };
   };
 
+  # Display settings
+  services.redshift = {
+    enable = true;
+    latitude = "50.8504500";
+    longitude = "4.3487800";
+    temperature = {
+      day = 6500;
+      night = 2700;
+    };
+  };
+
   # SSD settings (performance/maintenance)
   services.fstrim = {
     enable = true;
     interval = "weekly";
   };
-  fileSystems."/".options = [ 
+  fileSystems."/".options = [
     "noatime"      # Dont write read times back to disk (for longer SSD lifetime)
     "commit=1800"  # syncs every 30 mins
   ];
+
+  systemd.user.services."urxvtd" = {
+    enable = true;
+    description = "rxvt unicode daemon";
+    wantedBy = [ "default.target" ];
+    path = [ pkgs.rxvt_unicode ];
+    serviceConfig.Restart = "always";
+    serviceConfig.RestartSec = 2;
+    serviceConfig.ExecStart = "${pkgs.rxvt_unicode}/bin/urxvtd -q -o";
+  };
+
+  systemd.user.services."compton" = {
+    enable = true;
+    description = "";
+    wantedBy = [ "default.target" ];
+    path = [ pkgs.compton ];
+    serviceConfig.Type = "forking";
+    serviceConfig.Restart = "always";
+    serviceConfig.RestartSec = 2;
+    serviceConfig.ExecStart = "${pkgs.compton}/bin/compton -b -CG -d :0";
+  };
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.extraUsers.luc = {
