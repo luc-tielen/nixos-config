@@ -8,7 +8,14 @@
     python3
     xdg_utils
     xclip
+    xorg.xbacklight
     xorg.xset
+    numlockx
+    compton
+    rxvt_unicode
+    scrot
+    haskellPackages.xmobar
+    dmenu
     which
     curl
     wget

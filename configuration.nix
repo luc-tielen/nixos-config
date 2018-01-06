@@ -2,7 +2,7 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
 {
   imports =
@@ -93,16 +93,36 @@
 
     # Enable touchpad support.
     libinput.enable = true;
-    
-    # Enable the KDE Desktop Environment.
-    displayManager = {
-      sddm.enable = true;
-      sddm.autoNumlock = true;
+
+    # Use XMonad as the window manager.
+    windowManager.xmonad = {
+      enable = true;
+      enableContribAndExtras = true;
+      extraPackages = haskellPackages: [
+        haskellPackages.xmonad-contrib
+        haskellPackages.xmonad-extras
+        haskellPackages.xmonad
+      ];
     };
-    desktopManager.plasma5.enable = true;
-    displayManager.sessionCommands = ''
-      ${pkgs.xorg.xset}/bin/xset r rate 300 44
-    '';
+    windowManager.default = "xmonad";
+    desktopManager = {
+      xterm.enable = false;
+      default = "none";
+    };
+
+    displayManager = {
+      sessionCommands = lib.mkAfter
+      ''
+        ${pkgs.xorg.xset}/bin/xset r rate 300 44
+        ${pkgs.xorg.xsetroot}/bin/xsetroot -cursor_name left_ptr
+        ${pkgs.feh} --no-fehbg --bg-tile ~/.xmonad/wallpaper.png &
+        ${pkgs.numlockx} on
+      '';
+      slim = {
+        enable = true;
+        defaultUser = "luc";
+      };
+    };
   };
 
   # SSD settings (performance/maintenance)
