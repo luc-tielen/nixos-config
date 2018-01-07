@@ -67,7 +67,10 @@
   # started in user sessions.
   programs = {
     bash.enableCompletion = true;
-    zsh.enable = true;
+    zsh = {
+      enable = true;
+      promptInit = "autoload -U promptinit && promptinit";
+    };
     # mtr.enable = true;
     # gnupg.agent = { enable = true; enableSSHSupport = true; };
   };
