@@ -115,8 +115,8 @@
       ''
         ${pkgs.xorg.xset}/bin/xset r rate 300 44
         ${pkgs.xorg.xsetroot}/bin/xsetroot -cursor_name left_ptr
-        ${pkgs.feh} --no-fehbg --bg-tile ~/.xmonad/wallpaper.png &
         ${pkgs.numlockx} on
+        ${pkgs.feh}/bin/feh --no-fehbg --bg-fill /home/luc/.xmonad/wallpaper.png
       '';
       slim = {
         enable = true;
@@ -146,15 +146,7 @@
     "commit=1800"  # syncs every 30 mins
   ];
 
-  systemd.user.services."urxvtd" = {
-    enable = true;
-    description = "rxvt unicode daemon";
-    wantedBy = [ "default.target" ];
-    path = [ pkgs.rxvt_unicode ];
-    serviceConfig.Restart = "always";
-    serviceConfig.RestartSec = 2;
-    serviceConfig.ExecStart = "${pkgs.rxvt_unicode}/bin/urxvtd -q -o";
-  };
+  services.urxvtd.enable = true;
 
   systemd.user.services."compton" = {
     enable = true;

@@ -13,6 +13,7 @@
     numlockx
     compton
     rxvt_unicode
+    urxvt_perls
     scrot
     haskellPackages.xmobar
     dmenu
